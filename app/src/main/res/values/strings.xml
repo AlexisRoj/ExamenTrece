@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ExamenTrece</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="dias">
+
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miércoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+        <item>Sábado</item>
+        <item>Domingo</item>
+
+    </string-array>
+</resources>
