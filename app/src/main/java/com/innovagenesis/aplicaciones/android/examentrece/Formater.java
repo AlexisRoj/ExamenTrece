@@ -7,7 +7,6 @@ import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 
 /**
- *
  * Created by alexi on 24/05/2017.
  */
 
@@ -16,14 +15,27 @@ public class Formater implements AxisValueFormatter {
     private BarLineChartBase<?> chart;
     private Activity activity;
 
+    int contador;
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
 
         String[] dias = activity.getResources().getStringArray(R.array.dias);
 
-        String dia = "Lunes"; //activity.getString(Integer.parseInt(dias[(int) value ]));
+        contador++;
+        int valor = (int) value;
 
-        return dia;
+        if (valor == 0)
+            return "";
+        else {
+            try {
+                String dia = dias[valor];
+
+                return dia;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "";
+            }
+        }
     }
 
     @Override
