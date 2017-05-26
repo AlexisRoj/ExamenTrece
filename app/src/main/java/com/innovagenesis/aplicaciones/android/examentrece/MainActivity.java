@@ -2,6 +2,7 @@ package com.innovagenesis.aplicaciones.android.examentrece;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -22,6 +24,9 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
 
@@ -31,6 +36,11 @@ public class MainActivity extends AppCompatActivity
     private BarChart mChart;
     private int contador = 1;
     private ArrayList<BarEntry> yVals1;
+
+    /** Entorno de variables */
+    private InterstitialAd interstitialAd;
+    private CountDownTimer countDownTimer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +72,29 @@ public class MainActivity extends AppCompatActivity
             }
         });
         mCargarDatos(contador, 0f);
+
+
+        /**
+         * Seccion de publicidad
+         * */
+
+        interstitialAd = new InterstitialAd(this);
+        MobileAds.initialize(this,getString(R.string.id_admob));
+        interstitialAd.setAdUnitId(getString(R.string.id_admob));
+
+        countDownTimer = new CountDownTimer(3000, 50) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                valores.setText("Segundos Restantes: "+ ((millisUntilFinished / 1000) + 1));
+
+            }
+
+            @Override
+            public void onFinish() {
+                valores.setText("Listo!");
+            }
+        };
+
 
     }
 
@@ -132,7 +165,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            verPublicidad();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -147,4 +180,34 @@ public class MainActivity extends AppCompatActivity
     public void onNothingSelected() {
 
     }
+
+    public void mIniciarPublicidad(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interstitialAd.loadAd(adRequest);
+        countDownTimer.start();
+    }
+
+    //metodo que permite cargar la publicidad
+    private void verPublicidad() {
+        if(interstitialAd != null && interstitialAd.isLoaded()){
+            interstitialAd.show();
+        }else {
+            Toast.makeText(this, "No se cargo la Publicidad", Toast.LENGTH_SHORT).show();
+            mIniciarPublicidad();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mIniciarPublicidad();
+    }
+
+    @Override
+    protected void onPause() {
+        countDownTimer.cancel();
+        super.onPause();
+    }
+
 }
+
