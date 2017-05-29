@@ -3,6 +3,8 @@
     <string name="action_settings">Settings</string>
     <string name="presupuesto">Presupuesto semanal</string>
     <string name="id_admob">ca-app-pub-4858586696775019/8257393087</string>
+    <string name="sRestantes">Segundos Restantes:</string>
+    <string name="publicidad">Ver publicidad</string>
     <string-array name="dias">
 
         <item> </item>

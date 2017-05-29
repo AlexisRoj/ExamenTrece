@@ -17,22 +17,33 @@
         android:layout_weight="8" />
 
     <LinearLayout
+        android:paddingTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:layout_weight="1"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/valores"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInput"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="18dp"
-            android:layout_weight="1"
+            android:layout_weight="7"
             android:gravity="center_vertical"
-            android:padding="10dp" />
+            android:padding="10dp"
+            tools:ignore="NestedWeights">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/valores2"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="digite un valor"
+                android:inputType="number|numberDecimal" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.FloatingActionButton
+            android:layout_gravity="center"
             android:id="@+id/fab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,5 +51,15 @@
             app:srcCompat="@drawable/ic_touch" />
 
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/valores"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="18dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:visibility="gone" />
 
 </LinearLayout>

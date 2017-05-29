@@ -4,8 +4,11 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +34,7 @@ import com.google.android.gms.ads.MobileAds;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements OnChartValueSelectedListener {
+        implements OnChartValueSelectedListener, View.OnLongClickListener {
 
     private BarChart mChart;
     private int contador = 1;
@@ -51,9 +54,11 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mChart = (BarChart) findViewById(R.id.grafico);
+        mChart.setOnLongClickListener(this);
         final EditText valores = (EditText) findViewById(R.id.valores);
+        final TextInputEditText txtValores = (TextInputEditText)findViewById(R.id.valores2);
+        final TextInputLayout inputData =(TextInputLayout)findViewById(R.id.textInput) ;
 
-        yVals1 = new ArrayList<>();
 
         /**
          * Creacion del gráfico
@@ -61,14 +66,21 @@ public class MainActivity extends AppCompatActivity
 
         mInicializarGrafico();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                float data = Float.valueOf(valores.getText().toString());
-                mCargarDatos(contador, data);
-                contador++;
+                String errorUsuario = "";
+                if (TextUtils.isEmpty(txtValores.getText())) {
+                    errorUsuario = "No puede ser vacio";
+                } else{
+                    float data = Float.valueOf(txtValores.getText().toString());
+                    mCargarDatos(contador, data);
+                    contador++;
+                    txtValores.setText(null);
+                }
+                mValidarTextInput(inputData, errorUsuario);
             }
         });
         mCargarDatos(contador, 0f);
@@ -85,8 +97,7 @@ public class MainActivity extends AppCompatActivity
         countDownTimer = new CountDownTimer(3000, 50) {
             @Override
             public void onTick(long millisUntilFinished) {
-                valores.setText("Segundos Restantes: "+ ((millisUntilFinished / 1000) + 1));
-
+                valores.setText(getString(R.string.sRestantes)+ ((millisUntilFinished / 1000) + 1));
             }
 
             @Override
@@ -94,17 +105,21 @@ public class MainActivity extends AppCompatActivity
                 valores.setText("Listo!");
             }
         };
-
-
     }
 
+    /**
+     * Inicializa el grafico antes de ingresar datos
+     * */
     private void mInicializarGrafico() {
+
+        yVals1 = new ArrayList<>();
 
         mChart.setDrawBarShadow(false); // completa el grafico con sombra
         mChart.setDrawValueAboveBar(true); // posicion de la etiqueta de datos
         mChart.setDescription(""); //Descripcion para el grafico (Leyenda)
         mChart.setMaxVisibleValueCount(7); // Maximas etiquetas
         mChart.setPinchZoom(true); // Zomm
+        mChart.setAutoScaleMinMaxEnabled(true);
         mChart.setDrawGridBackground(false); //Fondo
 
         AxisValueFormatter xAxisFormatter = new Formater(mChart, this);
@@ -124,6 +139,9 @@ public class MainActivity extends AppCompatActivity
         l.setXEntrySpace(4f);
     }
 
+    /**
+    * Carga los datos del grafico
+    * */
     private void mCargarDatos(int contador, float valor) {
 
         float start = 0f;
@@ -181,6 +199,8 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Encargado de iniciar la publicidad*/
     public void mIniciarPublicidad(){
         AdRequest adRequest = new AdRequest.Builder().build();
         interstitialAd.loadAd(adRequest);
@@ -209,5 +229,28 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
     }
 
+    /**
+     * Limpia el grafico
+     * */
+    @Override
+    public boolean onLongClick(View v) {
+        Toast.makeText(this, "Precionado", Toast.LENGTH_SHORT).show();
+        mChart.clear();
+        mInicializarGrafico();
+        contador = 0;
+        mCargarDatos(contador, 0f);
+        return false;
+    }
+
+    /**
+     * Encargado de valirdar que el textinput no este vacio
+     * */
+    private void mValidarTextInput(TextInputLayout textInput, String mensajeError) {
+        textInput.setError(mensajeError);
+        if (mensajeError == null) {
+            textInput.setErrorEnabled(false);
+        } else
+            textInput.setErrorEnabled(true);
+    }
 }
 
