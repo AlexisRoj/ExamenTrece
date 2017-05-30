@@ -5,6 +5,15 @@
     <string name="id_admob">ca-app-pub-4858586696775019/8257393087</string>
     <string name="sRestantes">Segundos Restantes:</string>
     <string name="publicidad">Ver publicidad</string>
+    <string name="digite_un_valor_aleatorio">Digite un valor separador - (indice "-" data)</string>
+    <string name="digite_un_valor_secuencial">Digite un valor sin separador</string>
+    <string name="encabezadoDialogo">Tipo de llenando</string>
+    <string name="mensajeDialogo">Selecione el tipo de llenado del reporte</string>
+    <string name="botonSecuencial">Secuencial</string>
+    <string name="botonAleatorio">Aleatorio</string>
+    <string name="validacionIndices">El indice no puede ser mayor a los dias de la semana</string>
+    <string name="errorAds">No se cargo la Publicidad</string>
+    <string name="error_campo_vacio">No puede ser vacio</string>
     <string-array name="dias">
 
         <item> </item>

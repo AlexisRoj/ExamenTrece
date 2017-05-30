@@ -16,6 +16,7 @@ public class Formater implements AxisValueFormatter {
     private Activity activity;
 
     int contador;
+
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
 
@@ -28,9 +29,9 @@ public class Formater implements AxisValueFormatter {
             return "";
         else {
             try {
-                String dia = dias[valor];
 
-                return dia;
+                 return dias[valor];
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return "";
