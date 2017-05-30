@@ -5,10 +5,10 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.innovagenesis.aplicaciones.android.examentrece"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         multiDexEnabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -17,6 +17,23 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        develop {
+            applicationId "com.innovagenesis.aplicaciones.android.examentrece.develop"
+        }
+        alpha {
+            versionNameSuffix "-alpha"
+        }
+        beta {
+            versionNameSuffix "-beta"
+        }
+        releaseCandidate {
+            versionNameSuffix "-rc"
+        }
+        estable {
         }
     }
 }
