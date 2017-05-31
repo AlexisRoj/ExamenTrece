@@ -190,10 +190,10 @@ public class MainActivity extends AppCompatActivity
          * Crea las etiquetas  *
          * * * * * * * * * * * */
         if (tipoIngresoDatos == 1) {
-            xAxisFormatter = new Formater(mChart, this);
+            xAxisFormatter = new Formater(this);
         } else if (tipoIngresoDatos == 2) {
             for (int i = 0; i < 7; i++) {
-                xAxisFormatter = new Formater(mChart, this);
+                xAxisFormatter = new Formater(this);
             }
         }
 
