@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -27,7 +26,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:paddingTop="5dp">
 
@@ -43,7 +42,7 @@
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/valores2"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
         </android.support.design.widget.TextInputLayout>
@@ -53,21 +52,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:tint="#FFF"
+            android:tint="@android:color/white"
             app:srcCompat="@drawable/ic_touch" />
 
     </LinearLayout>
 
     <EditText
         android:id="@+id/valores"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginBottom="18dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:padding="10dp"
         android:visibility="gone"
-        android:inputType="number"
-        tools:ignore="LabelFor" />
+        tools:ignore="LabelFor,TextFields" />
 
 </LinearLayout>
