@@ -11,7 +11,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -110,6 +109,7 @@ public class MainActivity extends AppCompatActivity
                 valores.setText(getString(R.string.sRestantes)
                         + ((millisUntilFinished / 1000) + 1));
             }
+
             @Override
             public void onFinish() {
                 valores.setText(R.string.listo);
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity
                             public void onClick(DialogInterface dialog, int which) {
                                 //Selecion secuencial
                                 tipoIngresoDatos = 1;
-                                inputEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                                //inputEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
                                 inputLayout.setHint(getString(R.string.digite_un_valor_secuencial));
 
                                 mInicializarGrafico(tipoIngresoDatos);
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 tipoIngresoDatos = 2;
-                                inputEditText.setInputType(InputType.TYPE_CLASS_DATETIME);
+                                //inputEditText.setInputType(InputType.TYPE_CLASS_DATETIME);
                                 inputLayout.setHint(getString(R.string.digite_un_valor_aleatorio));
                                 contadorGlobal = 7; //Envia a llenar las etiquetas
 
@@ -214,27 +214,27 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Encargado de limpiar el grafico
-     * */
+     */
     private AlertDialog getAlertDialogLimpiar() {
         return new AlertDialog.Builder(MainActivity.this)
-                            .setTitle(R.string.limpiar)
-                            .setMessage(R.string.desea_limpiar)
-                            .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                    startActivity(getIntent());
-                                    Toast.makeText(MainActivity.this,
-                                            R.string.limpiando_grafico, Toast.LENGTH_SHORT).show();
+                .setTitle(R.string.limpiar)
+                .setMessage(R.string.desea_limpiar)
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        startActivity(getIntent());
+                        Toast.makeText(MainActivity.this,
+                                R.string.limpiando_grafico, Toast.LENGTH_SHORT).show();
 
-                                }
-                            })
-                            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).create();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
     }
 
     /**
@@ -258,6 +258,7 @@ public class MainActivity extends AppCompatActivity
                     Toast.LENGTH_SHORT).show();
         }
     }
+
     /**
      * Metodo encargado de rellenar los datos del
      * grafico
@@ -322,7 +323,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Método que permite cargar la publicidad
-     * */
+     */
     private void verPublicidad() {
         if (interstitialAd != null && interstitialAd.isLoaded()) {
             interstitialAd.show();
@@ -343,6 +344,7 @@ public class MainActivity extends AppCompatActivity
         countDownTimer.cancel();
         super.onPause();
     }
+
     /**
      * Encargado de valirdar que el textinput no este vacio
      */
@@ -353,6 +355,7 @@ public class MainActivity extends AppCompatActivity
         } else
             textInput.setErrorEnabled(true);
     }
+
     /**
      * Clase encargada de interpretar el tipo de entrada que va
      * a tener el gráfico respectivo, separa los valores dependiendo
@@ -362,7 +365,9 @@ public class MainActivity extends AppCompatActivity
         private TextInputEditText txtValores;
         private float data;
 
-        /** Constructor */
+        /**
+         * Constructor
+         */
         SelecionarTipoEntrada(int indice, TextInputEditText txtValores) {
             this.indice = indice;
             this.txtValores = txtValores;
@@ -381,10 +386,17 @@ public class MainActivity extends AppCompatActivity
                 data = Float.valueOf(txtValores.getText().toString());
             } else {
                 String dividirCadena = txtValores.getText().toString();
-                String[] cadena = dividirCadena.split("-");
-                indice = Integer.parseInt(cadena[0]);
-                data = Float.valueOf(cadena[1]);
-                contadorGlobal = 7;
+
+                if (dividirCadena.contains("-")) {
+                    String[] cadena = dividirCadena.split("-");
+                    indice = Integer.parseInt(cadena[0]);
+
+                    data = Float.parseFloat(cadena[1]);
+                    contadorGlobal = 7;
+                } else {
+                    Toast.makeText(MainActivity.this, "No esta agregando el indice",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
             return this;
         }
