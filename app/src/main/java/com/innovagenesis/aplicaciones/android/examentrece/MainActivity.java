@@ -1,5 +1,6 @@
 package com.innovagenesis.aplicaciones.android.examentrece;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -61,7 +62,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mChart = (BarChart) findViewById(R.id.grafico);
-
         yVals1 = new ArrayList<>();
 
         final EditText valores = (EditText) findViewById(R.id.valores);
@@ -80,8 +80,6 @@ public class MainActivity extends AppCompatActivity
 
                 float data;
                 int indice = 0;
-                //contadorGlobal = 0;
-
                 String errorUsuario = "";
                 if (TextUtils.isEmpty(txtValores.getText())) {
                     errorUsuario = getString(R.string.error_campo_vacio);
@@ -90,7 +88,7 @@ public class MainActivity extends AppCompatActivity
                             new SelecionarTipoEntrada(indice, txtValores).invoke();
                     indice = selecionarTipoEntrada.getIndice();
                     data = selecionarTipoEntrada.getData();
-
+                    //Carga el grafico con los valores atrapados
                     mCargarDatos(contadorGlobal, indice, data, tipoIngresoDatos);
                     contadorGlobal++;
                     txtValores.setText(null);
@@ -98,37 +96,37 @@ public class MainActivity extends AppCompatActivity
                 mValidarTextInput(inputData, errorUsuario);
             }
         });
-        /**
-         * Seccion de publicidad
-         * */
+        /*
+          Seccion de publicidad
+          */
         interstitialAd = new InterstitialAd(this);
         MobileAds.initialize(this, getString(R.string.id_admob));
         interstitialAd.setAdUnitId(getString(R.string.id_admob));
 
         countDownTimer = new CountDownTimer(3000, 50) {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTick(long millisUntilFinished) {
-                valores.setText(getString(R.string.sRestantes) + ((millisUntilFinished / 1000) + 1));
+                valores.setText(getString(R.string.sRestantes)
+                        + ((millisUntilFinished / 1000) + 1));
             }
-
             @Override
             public void onFinish() {
-                valores.setText("Listo!");
+                valores.setText(R.string.listo);
             }
         };
     }
-
 
     /**
      * Encargado de selecionar el tipo de llenado
      * Cambia mensajes de ayuda e inicializa el grafico
      * además identifica el tipo de ingreso que va haber
      *
-     * @param inputData
-     * @param txtValores
+     * @param inputLayout
+     * @param inputEditText
      */
-    private AlertDialog getAlertDialog(final TextInputLayout inputData,
-                                       final TextInputEditText txtValores) {
+    private AlertDialog getAlertDialog(final TextInputLayout inputLayout,
+                                       final TextInputEditText inputEditText) {
         return new AlertDialog.Builder(this)
                 .setTitle(R.string.encabezadoDialogo)
                 .setMessage(R.string.mensajeDialogo)
@@ -138,8 +136,9 @@ public class MainActivity extends AppCompatActivity
                             public void onClick(DialogInterface dialog, int which) {
                                 //Selecion secuencial
                                 tipoIngresoDatos = 1;
-                                txtValores.setInputType(InputType.TYPE_CLASS_NUMBER);
-                                inputData.setHint(getString(R.string.digite_un_valor_secuencial));
+                                inputEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                                inputLayout.setHint(getString(R.string.digite_un_valor_secuencial));
+
                                 mInicializarGrafico(tipoIngresoDatos);
                                 mCargarDatos(contadorGlobal, 0, 0f, tipoIngresoDatos);
 
@@ -151,10 +150,10 @@ public class MainActivity extends AppCompatActivity
                             //Seleccion Aleatoria
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                txtValores.setInputType(InputType.TYPE_CLASS_DATETIME);
                                 tipoIngresoDatos = 2;
-                                inputData.setHint(getString(R.string.digite_un_valor_aleatorio));
-                                contadorGlobal = 7;
+                                inputEditText.setInputType(InputType.TYPE_CLASS_DATETIME);
+                                inputLayout.setHint(getString(R.string.digite_un_valor_aleatorio));
+                                contadorGlobal = 7; //Envia a llenar las etiquetas
 
                                 mInicializarGrafico(tipoIngresoDatos);
                                 mCargarDatos(contadorGlobal, 0, 0f, tipoIngresoDatos);
@@ -178,11 +177,18 @@ public class MainActivity extends AppCompatActivity
         mChart.setPinchZoom(true); // Zomm
         mChart.setAutoScaleMinMaxEnabled(true);
         mChart.setDrawGridBackground(false); //Fondo
-
-        /**
-         * Crea las etiquetas
-         * */
-
+        mChart.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog alertLimpiarGrafico = getAlertDialogLimpiar();
+                alertLimpiarGrafico.setCancelable(false);
+                alertLimpiarGrafico.show();
+                return true;
+            }
+        });
+        /* * * * * * * * * * * *
+         * Crea las etiquetas  *
+         * * * * * * * * * * * */
         if (tipoIngresoDatos == 1) {
             xAxisFormatter = new Formater(mChart, this);
         } else if (tipoIngresoDatos == 2) {
@@ -207,14 +213,36 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Carga los datos del grafico
+     * Encargado de limpiar el grafico
+     * */
+    private AlertDialog getAlertDialogLimpiar() {
+        return new AlertDialog.Builder(MainActivity.this)
+                            .setTitle(R.string.limpiar)
+                            .setMessage(R.string.desea_limpiar)
+                            .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                    startActivity(getIntent());
+                                    Toast.makeText(MainActivity.this,
+                                            R.string.limpiando_grafico, Toast.LENGTH_SHORT).show();
+
+                                }
+                            })
+                            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).create();
+    }
+
+    /**
+     * Carga los datos del grafico y valida el tipo de llenado
      */
     private void mCargarDatos(int contador, int indice, float dato, int tipoLlenado) {
-
         if (indice <= 7) {
-
             float start = 0f;
-
             mChart.getXAxis().setAxisMinValue(start); //Inicio del eje x
             mChart.getXAxis().setAxisMaxValue(start + contador + 1); //cantidad elementos eje x
 
@@ -223,20 +251,18 @@ public class MainActivity extends AppCompatActivity
                     && tipoLlenado == 2) {
                 mInsertarDatos(indice, dato);
             } else {
-                mInsertarDatos(contadorGlobal, dato);
+                mInsertarDatos(contador, dato);
             }
         } else {
             Toast.makeText(this, R.string.validacionIndices,
                     Toast.LENGTH_SHORT).show();
         }
     }
-
     /**
      * Metodo encargado de rellenar los datos del
      * grafico
      */
     private void mInsertarDatos(int indice, float dato) {
-
         BarDataSet set1;
         yVals1.add(new BarEntry(indice, dato));
         set1 = new BarDataSet(yVals1, "Nombres");
@@ -250,7 +276,6 @@ public class MainActivity extends AppCompatActivity
         data.setBarWidth(0.9f);
         mChart.setData(data);
         mChart.invalidate();
-
     }
 
 
@@ -295,7 +320,9 @@ public class MainActivity extends AppCompatActivity
         countDownTimer.start();
     }
 
-    //metodo que permite cargar la publicidad
+    /**
+     * Método que permite cargar la publicidad
+     * */
     private void verPublicidad() {
         if (interstitialAd != null && interstitialAd.isLoaded()) {
             interstitialAd.show();
@@ -316,8 +343,6 @@ public class MainActivity extends AppCompatActivity
         countDownTimer.cancel();
         super.onPause();
     }
-
-
     /**
      * Encargado de valirdar que el textinput no este vacio
      */
@@ -328,7 +353,6 @@ public class MainActivity extends AppCompatActivity
         } else
             textInput.setErrorEnabled(true);
     }
-
     /**
      * Clase encargada de interpretar el tipo de entrada que va
      * a tener el gráfico respectivo, separa los valores dependiendo
@@ -338,7 +362,8 @@ public class MainActivity extends AppCompatActivity
         private TextInputEditText txtValores;
         private float data;
 
-        public SelecionarTipoEntrada(int indice, TextInputEditText txtValores) {
+        /** Constructor */
+        SelecionarTipoEntrada(int indice, TextInputEditText txtValores) {
             this.indice = indice;
             this.txtValores = txtValores;
         }
@@ -347,11 +372,11 @@ public class MainActivity extends AppCompatActivity
             return data;
         }
 
-        public int getIndice() {
+        int getIndice() {
             return indice;
         }
 
-        public SelecionarTipoEntrada invoke() {
+        SelecionarTipoEntrada invoke() {
             if (tipoIngresoDatos == 1) {
                 data = Float.valueOf(txtValores.getText().toString());
             } else {

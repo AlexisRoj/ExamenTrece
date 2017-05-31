@@ -14,6 +14,13 @@
     <string name="validacionIndices">El indice no puede ser mayor a los dias de la semana</string>
     <string name="errorAds">No se cargo la Publicidad</string>
     <string name="error_campo_vacio">No puede ser vacio</string>
+    <string name="mantenga_precionado_el_gr_fico_para_limpiarlo">Mantenga precionado el gráfico para limpiarlo</string>
+    <string name="listo">Listo!</string>
+    <string name="limpiar">Limpiar</string>
+    <string name="desea_limpiar">¿Desea limpiar el grafico?</string>
+    <string name="si">Si</string>
+    <string name="limpiando_grafico">Limpiando graficos</string>
+    <string name="no">No</string>
     <string-array name="dias">
 
         <item> </item>

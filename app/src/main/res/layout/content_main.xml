@@ -2,12 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.innovagenesis.aplicaciones.android.examentrece.MainActivity"
     tools:showIn="@layout/activity_main">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mantenga_precionado_el_gr_fico_para_limpiarlo"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"/>
 
 
     <com.github.mikephil.charting.charts.BarChart
@@ -58,6 +66,8 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:padding="10dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:inputType="number"
+        tools:ignore="LabelFor" />
 
 </LinearLayout>
